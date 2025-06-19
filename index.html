@@ -8,36 +8,55 @@
       rel="stylesheet"
     />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <title>Document</title>
+    <title>Todo App</title>
   </head>
-  <body>
+  <body class="bg-gray-100 min-h-screen">
     <header
-      class="flex justify-between h-24 items-center bg-red-300 px-12 text-amber-900 font-bold"
+      class="flex justify-between h-24 items-center bg-red-300 px-12 text-amber-900 font-bold shadow-lg"
     >
-      <div>Todo Web App</div>
+      <div class="text-2xl">Todo Web App</div>
       <div class="flex gap-10">
-        <div>Home</div>
-        <div>Completed Todos</div>
-        <div>About</div>
+        <div class="cursor-pointer hover:text-amber-700">Home</div>
+        <div class="cursor-pointer hover:text-amber-700">Completed Todos</div>
+        <div class="cursor-pointer hover:text-amber-700">About</div>
       </div>
       <div>user: Uzair</div>
     </header>
-    <div class="flex gap-2 w-[50%] max-w-[1875px] mx-auto py-8">
-      <input
-        class="border border-black py-4 px-2 rounded-[20px] w-[100%] mx-auto drop-shadow-sm"
-        type="text"
-        id="todo"
-        name="todo"
-        placeholder="Please Enter Your Todos"
-      />
-      <button 
-        class="border rounded-[20px] w-[20%] drop-shadow-sm"
-        onClick="addtodo()"
-      >
-        Add Todo
-      </button>
-      <ul id="todo-list"></ul>
-    </div>
+    
+    <main class="container mx-auto px-4 py-8">
+      <div class="max-w-2xl mx-auto">
+        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+          <h2 class="text-xl font-semibold mb-4 text-gray-800">Add New Todo</h2>
+          <div class="flex gap-2">
+            <input
+              class="border border-gray-300 py-3 px-4 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              type="text"
+              id="todo"
+              name="todo"
+              placeholder="Enter your todo here..."
+            />
+            <button 
+              class="border rounded-lg px-6 py-3 bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200 font-medium"
+              id="addtodobutton"
+            >
+              Add Todo
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <h2 class="text-xl font-semibold mb-4 text-gray-800">Your Todos</h2>
+          <ul id="todo-list" class="space-y-2">
+          </ul>
+          <div id="loading" class="text-center text-gray-500 py-4 hidden">
+            Loading todos...
+          </div>
+          <div id="empty-state" class="text-center text-gray-500 py-8">
+            No todos yet. Add your first todo above!
+          </div>
+        </div>
+      </div>
+    </main>
 
     <script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore-compat.js"></script>

@@ -1,5 +1,3 @@
-alert("hello")
-
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
 import {
   getFirestore,
@@ -9,6 +7,7 @@ import {
   doc,
   deleteDoc,
   updateDoc,
+  setDoc,
 } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -23,4 +22,4 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-export { collection, getDocs, addDoc, doc, deleteDoc, updateDoc };
+export { collection, getDocs, addDoc, doc, deleteDoc, updateDoc, db, setDoc };
