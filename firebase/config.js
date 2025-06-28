@@ -9,6 +9,14 @@ import {
   updateDoc,
   setDoc,
 } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+} from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyBbVX8XT4Q2Ts1WQmlHlBC7c1do-BQV2IQ",
@@ -21,5 +29,20 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
 
-export { collection, getDocs, addDoc, doc, deleteDoc, updateDoc, db, setDoc };
+export {
+  collection,
+  getDocs,
+  addDoc,
+  doc,
+  deleteDoc,
+  updateDoc,
+  db,
+  setDoc,
+  auth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+};
