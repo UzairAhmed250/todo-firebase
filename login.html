@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link
+      href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>Login</title>
+</head>
+<body>
+    <div class="flex flex-col  mt-[150px]">
+        <h1 class="text-2xl font-bold text-center ">Login</h1>
+        <form id="login-form" class="form flex flex-col gap-2 shadow-md p-4 rounded-md w-[30%] mx-auto h-[100%] mt-10">
+            <input type="email" id="email" placeholder="Email" class="w-full p-2 border border-gray-300 rounded-md">
+            <div class="relative">
+                <input type="password" id="password" placeholder="Password" class="w-full p-2 border border-gray-300 rounded-md">
+                <i class="fa-solid fa-eye absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer block" id="eye"></i>
+                <i class="fa-solid fa-eye-slash absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer hidden" id="eye-slash"></i>
+            </div>
+            
+            <button type="submit" class="w-full p-2 bg-blue-500 text-white rounded-md">Login</button>
+            <a href="./auth/signup.html" class="text-blue-500 text-center">Don't have an account? Register</a>
+        </form>
+    </div>
+
+    <script src="auth/auth.js" type="module"></script>
+</body>
+</html>

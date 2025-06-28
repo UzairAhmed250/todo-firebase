@@ -91,6 +91,7 @@ const loadTodos = async () => {
           </button>
         </div>
       `;
+      console.log("todoData", todoData)
       
       const checkbox = li.querySelector('input[type="checkbox"]');
       const editBtn = li.querySelector('.edit-btn');
