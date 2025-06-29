@@ -20,13 +20,14 @@ const addtodo = async (e) => {
   }
 
   loader = true;
-  mytodo.innerText = "Adding...";
+  mytodo.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Adding...';
 
   try {
     await addDoc(collection(db, "todos"), {
       task: value,
       createdAt: new Date(),
-      completed: false
+      completed: false,
+      // userId: user.uid
     });
 
     console.log("Todo added successfully");
@@ -37,7 +38,7 @@ const addtodo = async (e) => {
     alert("Error adding todo: " + error.message);
   } finally {
     loader = false;
-    mytodo.innerText = "Add Todo";
+    mytodo.innerHTML = '<i class="fas fa-plus mr-2"></i>Add Task';
   }
 };
 
@@ -61,34 +62,45 @@ const loadTodos = async () => {
     querySnapshot.forEach((doc) => {
       const todoData = doc.data();
       const li = document.createElement("li");
-      li.className = "flex justify-between items-center p-3 border-b border-gray-200 bg-white rounded-lg shadow-sm mb-2";
+      li.className = "bg-white/60 backdrop-blur-sm rounded-xl shadow-lg border border-white/20 p-4 hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02]";
       li.innerHTML = `
-        <div class="flex items-center gap-3 flex-1">
-          <input 
-            type="checkbox" 
-            ${todoData.completed ? 'checked' : ''} 
-            data-doc-id="${doc.id}"
-            data-completed="${todoData.completed}"
-            class="w-4 h-4 text-blue-600 rounded focus:ring-blue-500"
-          >
-          <span class="task-text ${todoData.completed ? 'line-through text-gray-500' : 'text-gray-800'} flex-1" id="task-${doc.id}">
-            ${todoData.task}
-          </span>
-        </div>
-        <div class="flex gap-2">
-          <button 
-            class="edit-btn bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600 text-sm transition-colors duration-200"
-            data-doc-id="${doc.id}"
-            data-task="${todoData.task}"
-          >
-            Edit
-          </button>
-          <button 
-            class="delete-btn bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 text-sm transition-colors duration-200"
-            data-doc-id="${doc.id}"
-          >
-            Delete
-          </button>
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-3 flex-1">
+            <div class="relative">
+              <input 
+                type="checkbox" 
+                ${todoData.completed ? 'checked' : ''} 
+                data-doc-id="${doc.id}"
+                data-completed="${todoData.completed}"
+                class="w-5 h-5 text-purple-600 rounded-lg focus:ring-purple-500 focus:ring-2 transition-all duration-200"
+              >
+              <div class="absolute inset-0 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 opacity-0 transition-opacity duration-200 pointer-events-none"></div>
+            </div>
+            <div class="flex-1">
+              <span class="task-text ${todoData.completed ? 'line-through text-gray-400' : 'text-gray-800'} text-lg font-medium transition-all duration-300" id="task-${doc.id}">
+                ${todoData.task}
+              </span>
+              <div class="text-xs text-gray-500 mt-1">
+                <i class="fas fa-clock mr-1"></i>
+                ${todoData.createdAt ? new Date(todoData.createdAt.toDate()).toLocaleDateString() : 'Just now'}
+              </div>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <button 
+              class="edit-btn bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105 font-medium text-sm"
+              data-doc-id="${doc.id}"
+              data-task="${todoData.task}"
+            >
+              <i class="fas fa-edit mr-1"></i>Edit
+            </button>
+            <button 
+              class="delete-btn bg-gradient-to-r from-red-400 to-pink-500 hover:from-red-500 hover:to-pink-600 text-white px-4 py-2 rounded-lg hover:shadow-lg transition-all duration-300 transform hover:scale-105 font-medium text-sm"
+              data-doc-id="${doc.id}"
+            >
+              <i class="fas fa-trash mr-1"></i>Delete
+            </button>
+          </div>
         </div>
       `;
       console.log("todoData", todoData)
@@ -108,7 +120,15 @@ const loadTodos = async () => {
   } catch (error) {
     console.error("Error loading todos:", error);
     loadingDiv.classList.add("hidden");
-    emptyStateDiv.innerHTML = "Error loading todos. Please try again.";
+    emptyStateDiv.innerHTML = `
+      <div class="text-center py-8">
+        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-exclamation-triangle text-2xl text-red-500"></i>
+        </div>
+        <h3 class="text-lg font-semibold text-red-600 mb-2">Error Loading Tasks</h3>
+        <p class="text-gray-500">Please try again later.</p>
+      </div>
+    `;
     emptyStateDiv.classList.remove("hidden");
   }
 };
@@ -137,14 +157,14 @@ const handleEditTodo = (event) => {
   mainInput.focus();
   mainInput.select();
   
-  mytodo.innerText = "Update Todo";
-  mytodo.className = "border rounded-lg px-6 py-3 bg-green-500 text-white hover:bg-green-600 transition-colors duration-200 font-medium";
+  mytodo.innerHTML = '<i class="fas fa-save mr-2"></i>Update Task';
+  mytodo.className = "bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl";
   
   if (!document.getElementById("cancel-edit")) {
     const cancelBtn = document.createElement("button");
     cancelBtn.id = "cancel-edit";
-    cancelBtn.className = "border rounded-lg px-6 py-3 bg-gray-500 text-white hover:bg-gray-600 transition-colors duration-200 font-medium ml-2";
-    cancelBtn.innerText = "Cancel";
+    cancelBtn.className = "bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl ml-4";
+    cancelBtn.innerHTML = '<i class="fas fa-times mr-2"></i>Cancel';
     cancelBtn.addEventListener("click", handleCancelEdit);
     mytodo.parentNode.appendChild(cancelBtn);
   }
@@ -181,8 +201,8 @@ const handleCancelEdit = () => {
 const resetToAddMode = () => {
   editingDocId = null;
   mainInput.value = "";
-  mytodo.innerText = "Add Todo";
-  mytodo.className = "border rounded-lg px-6 py-3 bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200 font-medium";
+  mytodo.innerHTML = '<i class="fas fa-plus mr-2"></i>Add Task';
+  mytodo.className = "bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl";
   
   const cancelBtn = document.getElementById("cancel-edit");
   if (cancelBtn) {
@@ -218,3 +238,25 @@ mainInput.addEventListener("keypress", (e) => {
     addtodo();
   }
 });
+
+let getUserName = async () => {
+  let userName = document.getElementById("user-name");
+  try {
+    const user = await getDocs(collection(db, "users"));
+    // console.log(user);
+    user.forEach((doc) => {
+      const userData = doc.data();
+      console.log("userData", userData);
+      let userFirstName = userData.firstName;
+      userName.innerText = userFirstName;
+      
+    })
+  } catch (error) {
+    console.error("Error getting user name:", error);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  getUserName();
+})
+

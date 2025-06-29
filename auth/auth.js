@@ -82,6 +82,7 @@ let loginUseer = async (e) => {
     signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
         console.log(userCredential);
+        window.location.replace(window.location.origin + "/index.html");
     })
     } catch (error) {
         console.log(error);
@@ -108,8 +109,12 @@ let registerUser = async(e)=>{
             email: email,
             uid: user.uid,
         }
-        await setDoc(doc(db, "users", user.uid), userData);
-        console.log("User data saved successfully:", userData); 
+
+        // console.log(userData);
+
+        const docRef = await doc(db, "users", user.uid)
+        await setDoc(docRef, userData);
+        // console.log("Document written with ID: ", docRef.id);
         
         window.location.replace(window.location.origin + "/index.html");
     } catch (error) {
