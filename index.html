@@ -112,5 +112,13 @@
     <script src="https://www.gstatic.com/firebasejs/11.9.1/firebase-auth-compat.js"></script>
     <script type="module" src="./app.js"></script>
     <script type="module" src="./auth/auth.js"></script>
+    <script>
+      function onClick(e) {
+        e.preventDefault();
+        grecaptcha.enterprise.ready(async () => {
+          const token = await grecaptcha.enterprise.execute('6Ld4QHIrAAAAAOVUJQUjw6fVivEJoqefdeX_d_ki', {action: 'LOGIN'});
+        });
+      }
+    </script>
   </body>
 </html>
