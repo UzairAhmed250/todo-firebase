@@ -7,13 +7,19 @@ import {
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup,
+  GithubAuthProvider 
 } from "../firebase/config.js";
+
+
 
 const publicPages = ["login.html", "signup.html"];
 
+
 onAuthStateChanged(auth, (user) => {
     const authPage = window.location.pathname.split("/").pop();
-    console.log(user)
+    console.log(user.displayName)
 
 
     if (user && publicPages.includes(authPage)) {
@@ -146,8 +152,64 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+let loader = false;
 
-let signupUser = async () => {
+let signInWithGoogle = () => {
+    // loader = true;
+    try{
+        const provider = new GoogleAuthProvider();
+
+        console.log("provider: " ,provider);
+        provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
+          signInWithPopup(auth, provider)
+        .then((userCredential) => {
+            console.log(userCredential);
+            // window.location.replace(window.location.origin + "/index.html");
+        })
+        // console.log(userCredential);
+        // window.location.replace(window.location.origin + "/index.html");
+        console.log("User Has been logged in with Google");
+    } catch (error) {
+        console.error("Error during signup with Google:", error);
+    } finally{
+        // loader = false;
+    }
 }
 
-// const signupForm = document.getElementById("signup-form");
+document.addEventListener("DOMContentLoaded", () =>{
+    const googleLoginButton = document.getElementById("google-login");
+    if(googleLoginButton){
+        googleLoginButton.addEventListener("click", signInWithGoogle);
+    }
+} )
+
+let signInWithGithub = () => {
+    try{
+        const provider = new GithubAuthProvider()
+        provider.addScope("repo")
+        signInWithPopup(auth, provider)
+        .then((result) => {
+            const crediential = GithubAuthProvider.credentialFromResult(result);
+            const token = crediential.accessToken;
+            isNewUser(result)
+            const user = result;
+            console.log(user);
+        }).catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            const email = error.customData.email;
+            const credential = GithubAuthProvider.credentialFromError(error);
+            console.log(errorCode, errorMessage, email, credential);
+        })
+    } catch (error) {
+        console.error("Error during GitHub sign in:", error);
+    }
+}
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    const githubLoginButton = document.getElementById("github-login");
+    if(githubLoginButton){
+        githubLoginButton.addEventListener("click", signInWithGithub);
+    }
+})

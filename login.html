@@ -10,12 +10,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <title>Login - TaskMaster Pro</title>
+    <script src="https://www.google.com/recaptcha/enterprise.js?render=6Ld4QHIrAAAAAOVUJQUjw6fVivEJoqefdeX_d_ki"></script>
 </head>
 <body class="bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 min-h-screen flex items-center justify-center p-4">
     <div class="w-full max-w-md">
-        <!-- Login Card -->
         <div class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border border-white/20">
-            <!-- Header -->
             <div class="text-center mb-8">
                 <div class="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
                     <i class="fas fa-user-lock text-3xl text-white"></i>
@@ -26,9 +25,7 @@
                 <p class="text-gray-600">Sign in to continue to TaskMaster Pro</p>
             </div>
 
-            <!-- Login Form -->
             <form id="login-form" class="space-y-6">
-                <!-- Email Field -->
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                         <i class="fas fa-envelope text-gray-400"></i>
@@ -42,7 +39,6 @@
                     >
                 </div>
 
-                <!-- Password Field -->
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                         <i class="fas fa-lock text-gray-400"></i>
@@ -60,7 +56,6 @@
                     </button>
                 </div>
 
-                <!-- Submit Button -->
                 <button 
                     type="submit" 
                     class="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
@@ -68,7 +63,6 @@
                     <i class="fas fa-sign-in-alt mr-2"></i>Sign In
                 </button>
 
-                <!-- Sign Up Link -->
                 <div class="text-center">
                     <a 
                         href="./auth/signup.html" 
@@ -79,7 +73,6 @@
                 </div>
             </form>
 
-            <!-- Divider -->
             <div class="relative my-6">
                 <div class="absolute inset-0 flex items-center">
                     <div class="w-full border-t border-gray-300"></div>
@@ -89,20 +82,18 @@
                 </div>
             </div>
 
-            <!-- Social Login Options -->
             <div class="space-y-3">
-                <button class="w-full bg-white border-2 border-gray-200 text-gray-700 font-medium py-3 px-4 rounded-xl hover:bg-gray-50 transition-colors duration-200 flex items-center justify-center">
+                <button class="w-full bg-white border-2 border-gray-200 text-gray-700 font-medium py-3 px-4 rounded-xl hover:bg-gray-50 transition-colors duration-200 flex items-center justify-center" id="google-login"> 
                     <i class="fab fa-google text-red-500 mr-3"></i>
                     Continue with Google
                 </button>
-                <button class="w-full bg-white border-2 border-gray-200 text-gray-700 font-medium py-3 px-4 rounded-xl hover:bg-gray-50 transition-colors duration-200 flex items-center justify-center">
+                <button class="w-full bg-white border-2 border-gray-200 text-gray-700 font-medium py-3 px-4 rounded-xl hover:bg-gray-50 transition-colors duration-200 flex items-center justify-center" id="github-login">
                     <i class="fab fa-github text-gray-800 mr-3"></i>
                     Continue with GitHub
                 </button>
             </div>
         </div>
 
-        <!-- Footer -->
         <div class="text-center mt-6">
             <p class="text-gray-500 text-sm">
                 © 2025 TaskMaster Pro. All rights reserved.
