@@ -19,7 +19,10 @@ const publicPages = ["login.html", "signup.html"];
 
 onAuthStateChanged(auth, (user) => {
     const authPage = window.location.pathname.split("/").pop();
-    console.log(user.displayName)
+    console.log(user)
+
+    const userName = document.getElementById("user-name");
+    userName.textContent = user.displayName;
 
 
     if (user && publicPages.includes(authPage)) {
@@ -160,14 +163,24 @@ let signInWithGoogle = () => {
         const provider = new GoogleAuthProvider();
 
         console.log("provider: " ,provider);
-        provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
+        // provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
           signInWithPopup(auth, provider)
-        .then((userCredential) => {
+        .then(async(userCredential) => {
+            const user = userCredential.user;
+            const userData = {
+                firstName: user.displayName,
+                lastName: user.displayName,
+                phoneNumber: user.phoneNumber,
+                email: user.email,
+                uid: user.uid,
+            }
             console.log(userCredential);
-            // window.location.replace(window.location.origin + "/index.html");
+
+            const docRef = await doc(db, "users", userCredential.user.uid)
+            await setDoc(docRef,userData);
+
         })
-        // console.log(userCredential);
-        // window.location.replace(window.location.origin + "/index.html");
+
         console.log("User Has been logged in with Google");
     } catch (error) {
         console.error("Error during signup with Google:", error);
@@ -193,7 +206,7 @@ let signInWithGithub = () => {
             const token = crediential.accessToken;
             isNewUser(result)
             const user = result;
-            console.log(user);
+            console.log("user: ", user);
         }).catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
