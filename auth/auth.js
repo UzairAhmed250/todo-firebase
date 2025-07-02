@@ -175,6 +175,8 @@ let signInWithGoogle = () => {
                 uid: user.uid,
             }
             console.log(userCredential);
+            location.replace(window.location.origin + "/index.html");   
+
 
             const docRef = await doc(db, "users", userCredential.user.uid)
             await setDoc(docRef,userData);
@@ -207,6 +209,7 @@ let signInWithGithub = () => {
             isNewUser(result)
             const user = result;
             console.log("user: ", user);
+            location.replace(window.location.origin + "/index.html");   
         }).catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
