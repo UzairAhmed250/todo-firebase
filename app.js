@@ -1,4 +1,4 @@
-import { addDoc, collection, db, getDocs, deleteDoc, doc, updateDoc } from "./firebase/config.js";
+import { addDoc, collection, db, getDocs, getDoc, deleteDoc, doc, updateDoc, auth, query, where } from "./firebase/config.js";
 
 const mytodo = document.getElementById("addtodobutton");
 const todoList = document.getElementById("todo-list");
@@ -19,6 +19,13 @@ const addtodo = async (e) => {
     return;
   }
 
+  // Check if user is logged in
+  const currentUser = auth.currentUser;
+  if (!currentUser) {
+    alert("Please log in to add todos");
+    return;
+  }
+
   loader = true;
   mytodo.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Adding...';
 
@@ -27,7 +34,7 @@ const addtodo = async (e) => {
       task: value,
       createdAt: new Date(),
       completed: false,
-      // userId: user.uid
+      userId: currentUser.uid
     });
 
     console.log("Todo added successfully");
@@ -50,7 +57,17 @@ const loadTodos = async () => {
     loadingDiv.classList.remove("hidden");
     emptyStateDiv.classList.add("hidden");
     
-    const querySnapshot = await getDocs(collection(db, "todos"));
+    // Check if user is logged in
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      emptyStateDiv.classList.remove("hidden");
+      loadingDiv.classList.add("hidden");
+      return;
+    }
+    
+    // Query todos for the current user only
+    const q = query(collection(db, "todos"), where("userId", "==", currentUser.uid));
+    const querySnapshot = await getDocs(q);
     todoList.innerHTML = "";
 
     if (querySnapshot.empty) {
@@ -242,19 +259,43 @@ mainInput.addEventListener("keypress", (e) => {
 let getUserName = async () => {
   let userName = document.getElementById("user-name");
   try {
-    const user = await getDocs(collection(db, "users"));
-    // console.log(user);
-    user.forEach((doc) => {
-      const userData = doc.data();
-      console.log("userData", userData);
-      let userFirstName = userData.firstName;
-      userName.innerText = userFirstName;
-      
-    })
+    // Get the current user from Firebase Auth
+    const currentUser = auth.currentUser;
+    
+    if (!currentUser) {
+      console.log("No user is currently logged in");
+      if (userName) {
+        userName.innerText = "Guest";
+      }
+      return;
+    }
+    
+    // Get the specific user document using the current user's UID
+    const userDocRef = doc(db, "users", currentUser.uid);
+    const userDoc = await getDoc(userDocRef);
+    
+    if (userDoc.exists()) {
+      const userData = userDoc.data();
+      console.log("Current user data:", userData);
+      if (userName) {
+        userName.innerText = userData.firstName || userData.displayName || currentUser.email || "User";
+      }
+    } else {
+      console.log("User document not found");
+      if (userName) {
+        userName.innerText = currentUser.displayName || currentUser.email || "User";
+      }
+    }
   } catch (error) {
     console.error("Error getting user name:", error);
+    if (userName) {
+      userName.innerText = "User";
+    }
   }
 }
+
+// Make getUserName available globally
+window.getUserName = getUserName;
 
 document.addEventListener("DOMContentLoaded", () => {
   getUserName();
