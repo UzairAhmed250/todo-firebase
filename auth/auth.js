@@ -9,7 +9,8 @@ import {
   onAuthStateChanged,
   GoogleAuthProvider,
   signInWithPopup,
-  GithubAuthProvider 
+  GithubAuthProvider,
+  setPersistence 
 } from "../firebase/config.js";
 
 
@@ -19,27 +20,51 @@ const publicPages = ["login.html", "signup.html"];
 
 onAuthStateChanged(auth, (user) => {
     const authPage = window.location.pathname.split("/").pop();
-    console.log(user)
+    console.log(user);
 
     const userName = document.getElementById("user-name");
-    userName.textContent = user.displayName;
 
+    if (user) {
+        // ✅ Update username when user is logged in
+        // Call the global getUserName function if available
+        if (window.getUserName) {
+            // Small delay to ensure DOM is ready
+            setTimeout(() => {
+                window.getUserName();
+            }, 100);
+        } else {
+            // Fallback if getUserName is not available
+            if (userName) {
+                userName.textContent = user.displayName || user.email || "User";
+            }
+        }
 
-    if (user && publicPages.includes(authPage)) {
-        console.log(user);
-        window.location.replace(window.location.origin + "/index.html");
+        if (publicPages.includes(authPage) && user.accessToken) {
+            console.log(user);
+            window.location.replace(window.location.origin + "/index.html");
+        }
     } 
-    else if(!user && !publicPages.includes(authPage)) {
+    else {
+        // ✅ Clear or set default when user is not logged in
+        if (userName) {
+            userName.textContent = "Guest";
+        }
+
         console.log("User is not logged in");
-        location.replace(window.location.origin + "/login.html");
+
+        if (!publicPages.includes(authPage)) {
+            location.replace(window.location.origin + "/login.html");
+        }
     }
-})
+});
+
 
 const logout = async () => {
     try {
         await signOut(auth);
         console.log("User logged out successfully");
         window.location.replace("login.html");
+        localStorage.clear();
     } catch (error) {
         console.error("Error during logout:", error);
         alert("Logout failed: " + error.message);
@@ -164,6 +189,9 @@ let signInWithGoogle = () => {
 
         console.log("provider: " ,provider);
         // provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
+        provider.setCustomParameters({
+            prompt: "select_account"
+        });
           signInWithPopup(auth, provider)
         .then(async(userCredential) => {
             const user = userCredential.user;
@@ -187,7 +215,15 @@ let signInWithGoogle = () => {
     } catch (error) {
         console.error("Error during signup with Google:", error);
     } finally{
-        // loader = false;
+        // console.error("Error during Google sign in:", error);
+
+        if(error.code === "auth/popup-closed-by-user"){
+            alert("Login cancelled. Please try again.");
+        } else if(error.code === "auth/popup-blocked"){
+            alert("Popup was blocked. Please allow popups for this site.");
+        } else {
+            alert("Login failed: " + error.message);
+        }
     }
 }
 
@@ -199,6 +235,7 @@ document.addEventListener("DOMContentLoaded", () =>{
 } )
 
 let signInWithGithub = () => {
+    setPersistence(auth, browserSessionPersistence)
     try{
         const provider = new GithubAuthProvider()
         provider.addScope("repo")
@@ -219,6 +256,16 @@ let signInWithGithub = () => {
         })
     } catch (error) {
         console.error("Error during GitHub sign in:", error);
+    } finally{
+        // console.error("Error during GitHub sign in:", error);
+
+        if(error.code === "auth/popup-closed-by-user"){
+            alert("Login cancelled. Please try again.");
+        } else if(error.code === "auth/popup-blocked"){
+            alert("Popup was blocked. Please allow popups for this site.");
+        } else {
+            alert("Login failed: " + error.message);
+        }
     }
 }
 

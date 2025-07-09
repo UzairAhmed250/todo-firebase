@@ -3,6 +3,7 @@ import {
   getFirestore,
   collection,
   getDocs,
+  getDoc,
   addDoc,
   doc,
   deleteDoc,
@@ -10,6 +11,7 @@ import {
   setDoc,
   query,
   where,
+  // query
 } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
 import {
   getAuth,
@@ -19,7 +21,10 @@ import {
   onAuthStateChanged,
   GoogleAuthProvider,
   signInWithPopup,
-  GithubAuthProvider 
+  GithubAuthProvider,
+  setPersistence,
+  browserSessionPersistence
+
 } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
 
 
@@ -39,6 +44,7 @@ const auth = getAuth(app);
 export {
   collection,
   getDocs,
+  getDoc,
   addDoc,
   doc,
   deleteDoc,
@@ -54,5 +60,8 @@ export {
   where,
   GoogleAuthProvider,
   signInWithPopup,
-  GithubAuthProvider 
+  GithubAuthProvider,
+  setPersistence,
+  browserSessionPersistence,
+  // query,
 };
